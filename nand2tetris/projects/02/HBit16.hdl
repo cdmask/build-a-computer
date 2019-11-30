@@ -1,0 +1,11 @@
+// Get the highest bit from 16 bit
+CHIP HBit16 {
+    IN in[16];
+
+    OUT out;
+
+    PARTS:
+    // Put your code here: 
+    And(a = in[15], b = true, out = out);
+
+}

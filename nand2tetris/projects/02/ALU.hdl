@@ -43,4 +43,31 @@ CHIP ALU {
 
     PARTS:
    // Put you code here:
+   Widen16(in  = false,   out = false16);
+   // preset x
+   Mux16(  a   = x,        b  = false16,  sel = zx, out = xpreset1);
+   Not16( in   = xpreset1,out = negatedx);
+   Mux16(  a   = xpreset1, b  = negatedx, sel = nx, out = xpreset2);
+   
+   // preset y
+   Mux16(  a   = y,        b  = false16, sel = zy,  out = ypreset1);
+   Not16( in   = ypreset1,out = negatedy);
+   Mux16(  a   = ypreset1, b  = negatedy, sel = ny, out = ypreset2);
+
+   // 
+   And16(a  = xpreset2,    b  = ypreset2, out = xandy);
+   Add16(a  = xpreset2,    b  = ypreset2, out = xaddy);
+   Mux16(a  = xandy,       b  = xaddy,    sel = f,  out = tempout);
+   Not16(in = tempout,   out  = negatedTempOut);
+   Mux16(a  = tempout,     b  = negatedTempOut, sel = no, out = final);
+
+   
+   Or16Way(in = final,    out =ifNotZero);
+   
+   Not (in  = ifNotZero,  out = zr);
+   HBit16(in = final,     out = signBit);
+   And (a    = signBit,   b   = true, out = ng);
+
+   Widen16(in = true, out = true16);
+   And16  (a  = true16, b = final, out = out);
 }
