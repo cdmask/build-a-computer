@@ -19,4 +19,65 @@ CHIP Mux8Way16 {
 
     PARTS:
     // Put your code here:
+    Not (in = sel[0], out = notSel0);
+    Not (in = sel[1], out = notSel1);
+    Not (in = sel[2], out = notSel2);
+
+    // a 000
+    And (a = notSel0, b =  notSel1, out = temp);
+    And (a = temp,    b = notSel2,  out = sela);
+    Widen16(in = sela, out = sela16);
+    And16(a = a, b = sela16, out = aAfterSel);
+
+    //b 001
+    And (a = sel[0],   b = notSel1,  out = temp1);
+    And (a = temp1,    b = notSel2,  out = selb);
+    Widen16(in = selb, out = selb16);
+    And16(a = b, b = selb16, out = bAfterSel);
+
+    //c 010
+    And (a = notSel0,  b = sel[1],  out = temp2);
+    And (a = temp2,    b = notSel2,  out = selc);
+    Widen16(in = selc, out = selc16);
+    And16(a = c, b = selc16, out = cAfterSel);
+
+    //d 011  
+    And (a = sel[0],   b = sel[1],   out = temp3);
+    And (a = temp3,    b = notSel2,  out = seld);
+    Widen16(in = seld, out = seld16);
+    And16(a = d, b = seld16, out = dAfterSel);
+
+    //e 100
+    And (a = notSel0,  b = notSel1,  out = temp4);
+    And (a = temp4,    b = sel[2],   out = sele);
+    Widen16(in = sele, out = sele16);
+    And16(a = e, b = sele16, out = eAfterSel);
+
+    //f 101
+    And (a = sel[0],   b = notSel1,  out = temp5);
+    And (a = temp5,    b = sel[2],   out = self);
+    Widen16(in = self, out = self16);
+    And16(a = f, b = self16, out = fAfterSel);
+
+    //g  110
+    And (a = notSel0,  b = sel[1],  out = temp6);
+    And (a = temp6,    b = sel[2],  out = selg);
+    Widen16(in = selg, out = selg16);
+    And16(a = g, b = selg16, out = gAfterSel);
+
+    //h 111
+    And (a = sel[0],   b = sel[1],  out = temp7);
+    And (a = temp7,    b = sel[2],  out = selh);
+    Widen16(in = selh, out = selh16);
+    And16(a = h, b = selh16, out = hAfterSel);
+
+    //output
+    Or16(a =  aAfterSel, b = bAfterSel, out = p1);
+    Or16(a =  p1       , b = cAfterSel, out = p2);
+    Or16(a =  p2       , b = dAfterSel, out = p3);
+    Or16(a =  p3       , b = eAfterSel, out = p4);
+    Or16(a =  p4       , b = fAfterSel, out = p5);
+    Or16(a =  p5       , b = gAfterSel, out = p6);
+    Or16(a =  p6       , b = hAfterSel, out = out);
+    
 }
