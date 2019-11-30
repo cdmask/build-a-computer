@@ -17,4 +17,31 @@ CHIP Mux4Way16 {
 
     PARTS:
     // Put your code here:
+    Not (in = sel[0], out = out1);
+    Not (in = sel[1], out = out2);
+    
+//select a[16], if sel[0] = 0 and sel[1] = 0, aAfterSel[] = a[], otherwis, aAfterSel[] = 0.
+
+And(a  = out1, b = out2, out = sela);
+
+Widen16(in = sela, out = sela16);
+And16( a = a, b= sela16, out = aAfterSel);
+// select b[16]
+And (a = out2, b = sel[0], out = selb);
+Widen16(in = selb, out = selb16);
+And16(a = b, b = selb16, out = bAfterSel);
+
+// select c[16]
+And (a = sel[1], b = out1, out = selc);
+Widen16(in = selc, out = selc16);
+And16( a = c, b = selc16, out = cAfterSel);
+// select d[16]
+And (a = sel[0], b = sel[1], out = seld);
+Widen16(in = seld, out = seld16);
+And16( a = d, b = seld16, out = dAfterSel);
+// output
+Or16(a = aAfterSel,b=bAfterSel,out=temp);
+Or16(a = temp,b =cAfterSel,out=temp1);
+Or16(a = temp1,b=dAfterSel,out=out);
+
 }
